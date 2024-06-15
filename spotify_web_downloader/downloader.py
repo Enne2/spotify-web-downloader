@@ -294,7 +294,8 @@ class Downloader:
         cover_path.write_bytes(self.get_image_bytes(cover_url))
 
     def cleanup_temp_path(self):
-        shutil.rmtree(self.temp_path)
+        #shutil.rmtree(self.temp_path)
+        pass
 
 
 class DownloadManager:

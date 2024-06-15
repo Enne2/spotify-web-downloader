@@ -129,6 +129,7 @@ class App:
                         raise ValueError(f"Unsupported item type to download: {item_type}")
 
         self.logger.info(f"Done ({error_tracker.error_count} error(s))")
+        return
 
     def process_track(
             self,

@@ -9,8 +9,9 @@ from yt_dlp import YoutubeDL
 from .downloader import Downloader
 from .enums import DownloadModeSong, RemuxMode
 from .models import Lyrics
-
-
+import uuid
+import json
+import os
 # TODO: Remove unused code.
 # TODO: Move common with DownloaderSong parts to a separate class.
 class DownloaderEpisode:
@@ -34,23 +35,17 @@ class DownloaderEpisode:
         self.codec = "MP4_128_DUAL" if self.premium_quality else "MP4_128"
 
     def get_final_path(self, tags: dict) -> Path:
-        final_path_folder = self.template_folder_show.split("/")
+        final_path_folder = None
         final_path_file = self.template_file.split("/")
-        final_path_folder = [
-            self.downloader.get_sanitized_string(i.format(**tags), True)
-            for i in final_path_folder
-        ]
-        final_path_file = [
-            self.downloader.get_sanitized_string(i.format(**tags), True)
-            for i in final_path_file[:-1]
-        ] + [
-            self.downloader.get_sanitized_string(
-                final_path_file[-1].format(**tags), False
-            )
-            + ".m4a"  # TODO: Research posible extensions of episode files.
-        ]
-        return self.downloader.output_path.joinpath(*final_path_folder).joinpath(
-            *final_path_file
+        
+        final_path_file = tags['title'] + ".m4a"
+        # final_path_json = tags['title'] + ".json"
+        # with open(self.downloader.output_path.joinpath(*final_path_folder).joinpath(
+        #     final_path_json
+        # ), 'w') as f:
+        #     json.dump(tags, f)
+        return self.downloader.output_path.joinpath(
+            final_path_file
         )
 
     def get_decryption_key(self, pssh: str) -> str:
@@ -95,8 +90,8 @@ class DownloaderEpisode:
             "title": metadata_gid["name"],
             "show": show_metadata["name"],
             "publisher": show_metadata["publisher"],
-            "episode": metadata_gid["episode_number"],
-            "season": metadata_gid["season_number"],
+           # "episode": metadata_gid["episode_number"],
+            #"season": metadata_gid["season_number"],
             "total_episodes": show_metadata["total_episodes"],
             "copyright": next(
                 (i["text"] for i in show_metadata["copyrights"] if i["type"] == "P"),

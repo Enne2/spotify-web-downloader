@@ -17,6 +17,7 @@ from .enums import RemuxMode
 from .hardcoded_wvd import HARDCODED_WVD
 from .models import DownloadQueueItem, UrlInfo
 from .spotify_api import SpotifyApi
+import os
 
 
 class Downloader:
@@ -25,7 +26,7 @@ class Downloader:
     def __init__(
         self,
         spotify_api: SpotifyApi,
-        output_path: Path = Path("./Spotify"),
+        output_path: Path = Path(os.environ.get("FOLDER_PATH", "poller")),
         temp_path: Path = Path("./temp"),
         wvd_path: Path = None,
 
@@ -43,7 +44,7 @@ class Downloader:
         silence: bool = False,
     ):
         self.spotify_api = spotify_api
-        self.output_path = output_path
+        self.output_path = Path(os.environ.get("FOLDER_PATH", "poller"))
         self.temp_path = temp_path
         self.wvd_path = wvd_path
         self.ffmpeg_path = ffmpeg_path
